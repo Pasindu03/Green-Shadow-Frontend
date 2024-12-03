@@ -3,16 +3,23 @@ $(document).ready(function () {
 
     // Fetch and load data from the backend
     function loadVehicles() {
+        var token = localStorage.getItem('jwtToken');
+        if (!token) {
+            alert("Please log in!");
+            return;
+        }
+
         $.ajax({
             url: "http://localhost:8080/green-shadow/api/v1/vehicles",
             method: "GET",
             headers: {
-                'Authorization': 'Bearer '+ localStorage.getItem('jwtToken')
+                'Authorization': 'Bearer ' + token
             },
             success: function (data) {
                 renderVehicleTable(data);
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error("Failed to load vehicles:", status, error);
                 alert("Failed to load vehicles!");
             }
         });
@@ -59,18 +66,28 @@ $(document).ready(function () {
             : `http://localhost:8080/green-shadow/api/v1/vehicles/${editIndex}`;
         const method = editIndex === -1 ? "POST" : "PUT";
 
+        var token = localStorage.getItem('jwtToken');
+        if (!token) {
+            alert("Please log in!");
+            return;
+        }
+
         $.ajax({
             url: url,
             method: method,
             contentType: false,
             processData: false,
             data: formData,
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
             success: function () {
                 $('#vehicleModal').modal('hide');
                 $('#vehicleForm')[0].reset();
                 loadVehicles();
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error("Failed to save vehicle:", status, error);
                 alert("Failed to save vehicle!");
             }
         });
@@ -96,7 +113,8 @@ $(document).ready(function () {
                 $('#vehicleModalLabel').text('Edit Vehicle');
                 $('#vehicleModal').modal('show');
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error("Failed to fetch vehicle data:", status, error);
                 alert("Failed to fetch vehicle data!");
             }
         });
@@ -106,13 +124,23 @@ $(document).ready(function () {
     $(document).on('click', '.delete-vehicle-btn', function () {
         const id = $(this).data("id");
 
+        var token = localStorage.getItem('jwtToken');
+        if (!token) {
+            alert("Please log in!");
+            return;
+        }
+
         $.ajax({
             url: `http://localhost:8080/green-shadow/api/v1/vehicles/${id}`,
             method: "DELETE",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
             success: function () {
                 loadVehicles();
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error("Failed to delete vehicle:", status, error);
                 alert("Failed to delete vehicle!");
             }
         });

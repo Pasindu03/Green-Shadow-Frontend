@@ -2,13 +2,20 @@ $(document).ready(function () {
 
     // Load crops into the table
     function loadCrops() {
-        console.log(localStorage.getItem('jwtToken'))
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+            alert("Authorization token is missing.");
+            return;
+        }
+
+        let temp_token = localStorage.getItem("jwtToken");
+        console.log("Token", temp_token)
         $.ajax({
             url: 'http://localhost:8080/green-shadow/api/v1/crops', // Backend endpoint for fetching crops
             type: 'GET',
             dataType: 'json',
             headers: {
-                'Authorization': 'Bearer '+ localStorage.getItem('jwtToken')
+                'Authorization': 'Bearer ' + temp_token
             },
             success: function (data) {
                 const cropTableBody = $("#cropTable tbody");
@@ -35,7 +42,8 @@ $(document).ready(function () {
                     `);
                 });
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.log(`Error: ${xhr.status} - ${xhr.statusText}`);
                 alert("Failed to load crops.");
             }
         });
@@ -49,8 +57,11 @@ $(document).ready(function () {
         if (isEdit) {
             // Load crop details into the form for editing
             $.ajax({
-                url: `http://localhost:8080/green-shadow/api/v1/crops/${cropCode}`,
+                url: `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`, // Use cropId here
                 type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken')
+                },
                 success: function (crop) {
                     $("#cropName").val(crop.cropName);
                     $("#ScientificName").val(crop.scientificName);
@@ -59,6 +70,9 @@ $(document).ready(function () {
                     $("#cropForm").data("edit", true).data("id", cropId);
                     $("#cropModalLabel").text("Edit Crop");
                     $("#cropModal").modal("show");
+                },
+                error: function () {
+                    alert("Failed to load crop details.");
                 }
             });
         } else {
@@ -81,12 +95,21 @@ $(document).ready(function () {
             ? `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`
             : 'http://localhost:8080/green-shadow/api/v1/crops';
 
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+            alert("Authorization token is missing.");
+            return;
+        }
+
         $.ajax({
             url: url,
             type: isEdit ? 'PUT' : 'POST',
             data: formData,
             processData: false,
             contentType: false,
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
             success: function () {
                 $("#cropModal").modal('hide');
                 loadCrops();
@@ -102,9 +125,18 @@ $(document).ready(function () {
     $(document).on("click", ".delete-btn", function () {
         const cropId = $(this).data("id");
         if (confirm("Are you sure you want to delete this crop?")) {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                alert("Authorization token is missing.");
+                return;
+            }
+
             $.ajax({
-                url: `http://localhost:8080/green-shadow/api/v1/crops/${cropCode}`,
+                url: `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`, // Use cropId here
                 type: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
                 success: function () {
                     loadCrops();
                     alert("Crop deleted successfully!");

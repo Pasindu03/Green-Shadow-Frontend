@@ -28,7 +28,8 @@ $(document).ready(function () {
             data: JSON.stringify(signInDTO),
             success: function (response) {
                 console.log(response); // Debugging purposes
-                localStorage.setItem('jwtToken', response.token); // Store the JWT token
+                alert(response.tokens)
+                localStorage.setItem('jwtToken', response.tokens); // Store the JWT token
                 window.location.href = 'dashboard.html'; // Redirect to dashboard
             },
             error: function (xhr) {
@@ -68,7 +69,7 @@ $('#signUpForm').on('submit', function (event) {
             data: JSON.stringify(signUpDTO),
             success: function (response) {
                 console.log(response); // Debugging purposes
-                localStorage.setItem('jwtToken', response.token); // Store the JWT token
+                localStorage.setItem('jwtToken', response.tokens); // Store the JWT token
                 alert('Sign-up successful!');
                 window.location.href = 'dashboard.html'; // Redirect to dashboard
             },
