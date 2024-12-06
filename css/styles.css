@@ -1,0 +1,15 @@
+/* File: css/styles.css */
+
+/* Custom Styles (Optional) */
+
+/* Example: Centering the form vertically */
+body, html {
+    height: 100%;
+}
+
+.container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
