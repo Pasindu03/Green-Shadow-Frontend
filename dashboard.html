@@ -394,6 +394,27 @@
     </table>
   </div>
 
+  <!-- Log Tab -->
+  <div class="tab-content" id="log">
+    <div id="logAlert"></div>
+    <button class="btn btn-primary" id="addLogBtn">Add New Log</button>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Details</th>
+        <th>Observed Image</th>
+        <th>Fields</th>
+        <th>Crops</th>
+        <th>Staffs</th>
+      </tr>
+      </thead>
+      <tbody id="logTableBody">
+      </tbody>
+    </table>
+  </div>
+
   <!-- Equipment Tab -->
   <div class="tab-content" id="equipment">
     <div id="equipmentAlert"></div>
@@ -582,6 +603,7 @@
   </div>
 </div>
 
+
 <!-- Add Vehicle Modal -->
 <div class="modal" id="addVehicleModal">
   <div class="modal-content">
@@ -688,6 +710,92 @@
       <span class="error" id="editEquipmentStatusError"></span>
 
       <button type="submit" class="btn btn-primary">Update Equipment</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Log Modal -->
+<div class="modal" id="addLogModal">
+  <div class="modal-content">
+    <span class="close close-modal">&times;</span>
+    <h2>Add New Log</h2>
+    <div id="addLogAlert"></div>
+    <form id="addLogForm">
+      <label for="logDate">Date</label>
+      <input type="date" id="logDate" name="logDate" required>
+      <span class="error" id="logDateError"></span>
+
+      <label for="logDetails">Details</label>
+      <textarea id="logDetails" name="logDetails" required></textarea>
+      <span class="error" id="logDetailsError"></span>
+
+      <label for="observedImage">Observed Image</label>
+      <input type="file" id="observedImage" name="observedImage" required>
+      <span class="error" id="observedImageError"></span>
+
+      <label for="logFields">Fields</label>
+      <select id="logFields" name="logFields" multiple required>
+        <option value="1">Field 1</option>
+        <option value="2">Field 2</option>
+        <!-- Dynamic field options -->
+      </select>
+
+      <label for="logCrops">Crops</label>
+      <select id="logCrops" name="logCrops" multiple required>
+        <option value="1">Crop 1</option>
+        <option value="2">Crop 2</option>
+        <!-- Dynamic crop options -->
+      </select>
+
+      <label for="logStaffs">Staffs</label>
+      <select id="logStaffs" name="logStaffs" multiple required>
+        <option value="1">Staff 1</option>
+        <option value="2">Staff 2</option>
+        <!-- Dynamic staff options -->
+      </select>
+
+      <button type="submit" class="btn btn-primary">Add Log</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Log Modal -->
+<div class="modal" id="editLogModal">
+  <div class="modal-content">
+    <span class="close close-modal">&times;</span>
+    <h2>Edit Log</h2>
+    <div id="editLogAlert"></div>
+    <form id="editLogForm">
+      <input type="hidden" id="editLogId" name="editLogId">
+
+      <label for="editLogDate">Date</label>
+      <input type="date" id="editLogDate" name="editLogDate" required>
+      <span class="error" id="editLogDateError"></span>
+
+      <label for="editLogDetails">Details</label>
+      <textarea id="editLogDetails" name="editLogDetails" required></textarea>
+      <span class="error" id="editLogDetailsError"></span>
+
+      <label for="editObservedImage">Observed Image</label>
+      <input type="file" id="editObservedImage" name="editObservedImage">
+      <span class="error" id="editObservedImageError"></span>
+
+      <label for="editLogFields">Fields</label>
+      <select id="editLogFields" name="editLogFields" multiple required>
+        <!-- Dynamic field options -->
+      </select>
+
+      <label for="editLogCrops">Crops</label>
+      <select id="editLogCrops" name="editLogCrops" multiple required>
+        <!-- Dynamic crop options -->
+      </select>
+
+      <label for="editLogStaffs">Staffs</label>
+      <select id="editLogStaffs" name="editLogStaffs" multiple required>
+        <!-- Dynamic staff options -->
+      </select>
+
+      <button type="submit" class="btn btn-primary">Update Log</button>
     </form>
   </div>
 </div>

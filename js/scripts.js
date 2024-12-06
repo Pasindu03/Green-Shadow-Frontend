@@ -232,8 +232,9 @@ $(document).ready(function() {
      */
     function checkAuthentication() {
         console.log(window.location)
+        console.log(window.location.pathname)
         if (!getToken()) {
-            if(window.location.pathname !== "/green-shadow-frontend/index.html"){
+            if(window.location.pathname !== "/Green-Shadow-Frontend/index.html"){
                 window.location.href = 'index.html'; // Redirect to login page
             }
         }
@@ -375,7 +376,7 @@ $(document).ready(function() {
 
         // AJAX POST request to add field
         $.ajax({
-            url: 'http://localhost:8080/api/fields',
+            url: 'http://localhost:8080/green-shadow/api/v1/fields',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -408,7 +409,7 @@ $(document).ready(function() {
 
         // Fetch field details
         $.ajax({
-            url: `http://localhost:8080/api/fields/${fieldId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/fields/${fieldId}`,
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -479,7 +480,7 @@ $(document).ready(function() {
 
         // AJAX PUT request to update field
         $.ajax({
-            url: `http://localhost:8080/api/fields/${fieldId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/fields/${fieldId}`,
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -511,7 +512,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this field?')) {
             // AJAX DELETE request to delete field
             $.ajax({
-                url: `http://localhost:8080/api/fields/${fieldId}`,
+                url: `http://localhost:8080/green-shadow/api/v1/fields/${fieldId}`,
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`
@@ -533,7 +534,7 @@ $(document).ready(function() {
      */
     function fetchCrops() {
         $.ajax({
-            url: 'http://localhost:8080/api/crops',
+            url: 'http://localhost:8080/green-shadow/api/v1/crops',
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -591,7 +592,7 @@ $(document).ready(function() {
      */
     function populateFieldsDropdown() {
         $.ajax({
-            url: 'http://localhost:8080/api/fields',
+            url: 'http://localhost:8080/green-shadow/api/v1/fields',
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -684,7 +685,7 @@ $(document).ready(function() {
 
         // AJAX POST request to add crop
         $.ajax({
-            url: 'http://localhost:8080/api/crops',
+            url: 'http://localhost:8080/green-shadow/api/v1/crops',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -716,7 +717,7 @@ $(document).ready(function() {
 
         // Fetch crop details
         $.ajax({
-            url: `http://localhost:8080/api/crops/${cropId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`,
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -799,7 +800,7 @@ $(document).ready(function() {
 
         // AJAX PUT request to update crop
         $.ajax({
-            url: `http://localhost:8080/api/crops/${cropId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`,
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -831,7 +832,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this crop?')) {
             // AJAX DELETE request to delete crop
             $.ajax({
-                url: `http://localhost:8080/api/crops/${cropId}`,
+                url: `http://localhost:8080/green-shadow/api/v1/crops/${cropId}`,
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`
@@ -853,7 +854,7 @@ $(document).ready(function() {
      */
     function fetchStaff() {
         $.ajax({
-            url: 'http://localhost:8080/api/staff',
+            url: 'http://localhost:8080/green-shadow/api/v1/staff',
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -954,7 +955,7 @@ $(document).ready(function() {
 
         // AJAX POST request to add staff
         $.ajax({
-            url: 'http://localhost:8080/api/staff',
+            url: 'http://localhost:8080/green-shadow/api/v1/staff',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -986,7 +987,7 @@ $(document).ready(function() {
 
         // Fetch staff details
         $.ajax({
-            url: `http://localhost:8080/api/staff/${staffId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/staff/${staffId}`,
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1058,7 +1059,7 @@ $(document).ready(function() {
 
         // AJAX PUT request to update staff
         $.ajax({
-            url: `http://localhost:8080/api/staff/${staffId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/staff/${staffId}`,
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1090,7 +1091,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this staff member?')) {
             // AJAX DELETE request to delete staff
             $.ajax({
-                url: `http://localhost:8080/api/staff/${staffId}`,
+                url: `http://localhost:8080/green-shadow/api/v1/staff/${staffId}`,
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`
@@ -1112,7 +1113,7 @@ $(document).ready(function() {
      */
     function fetchVehicles() {
         $.ajax({
-            url: 'http://localhost:8080/api/vehicles',
+            url: 'http://localhost:8080/green-shadow/api/v1/vehicles',
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1213,7 +1214,7 @@ $(document).ready(function() {
 
         // AJAX POST request to add vehicle
         $.ajax({
-            url: 'http://localhost:8080/api/vehicles',
+            url: 'http://localhost:8080/green-shadow/api/v1/vehicles',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1245,7 +1246,7 @@ $(document).ready(function() {
 
         // Fetch vehicle details
         $.ajax({
-            url: `http://localhost:8080/api/vehicles/${vehicleId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/vehicles/${vehicleId}`,
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1316,7 +1317,7 @@ $(document).ready(function() {
 
         // AJAX PUT request to update vehicle
         $.ajax({
-            url: `http://localhost:8080/api/vehicles/${vehicleId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/vehicles/${vehicleId}`,
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1348,7 +1349,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this vehicle?')) {
             // AJAX DELETE request to delete vehicle
             $.ajax({
-                url: `http://localhost:8080/api/vehicles/${vehicleId}`,
+                url: `http://localhost:8080/green-shadow/api/v1/vehicles/${vehicleId}`,
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`
@@ -1370,7 +1371,7 @@ $(document).ready(function() {
      */
     function fetchEquipment() {
         $.ajax({
-            url: 'http://localhost:8080/api/equipment',
+            url: 'http://localhost:8080/green-shadow/api/v1/equipment',
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1471,7 +1472,7 @@ $(document).ready(function() {
 
         // AJAX POST request to add equipment
         $.ajax({
-            url: 'http://localhost:8080/api/equipment',
+            url: 'http://localhost:8080/green-shadow/api/v1/equipment',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1503,7 +1504,7 @@ $(document).ready(function() {
 
         // Fetch equipment details
         $.ajax({
-            url: `http://localhost:8080/api/equipment/${equipmentId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/equipment/${equipmentId}`,
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1574,7 +1575,7 @@ $(document).ready(function() {
 
         // AJAX PUT request to update equipment
         $.ajax({
-            url: `http://localhost:8080/api/equipment/${equipmentId}`,
+            url: `http://localhost:8080/green-shadow/api/v1/equipment/${equipmentId}`,
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -1606,7 +1607,7 @@ $(document).ready(function() {
         if (confirm('Are you sure you want to delete this equipment?')) {
             // AJAX DELETE request to delete equipment
             $.ajax({
-                url: `http://localhost:8080/api/equipment/${equipmentId}`,
+                url: `http://localhost:8080/green-shadow/api/v1/equipment/${equipmentId}`,
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`
@@ -1659,3 +1660,210 @@ $(document).ready(function() {
     init();
 
 });
+
+/**
+ * Function to fetch and display Logs data.
+ */
+function fetchLogs() {
+    $.ajax({
+        url: 'http://localhost:8080/green-shadow/api/v1/logs',
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        },
+        success: function(data) {
+            populateLogsTable(data);
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to fetch logs.';
+            showAlert('logAlert', error, 'danger');
+        }
+    });
+}
+
+/**
+ * Function to populate Logs table.
+ * @param {Array} logs - Array of log objects.
+ */
+function populateLogsTable(logs) {
+    const tbody = $('#logTableBody');
+    tbody.empty();
+
+    if (logs.length === 0) {
+        tbody.append('<tr><td colspan="7" style="text-align:center;">No logs available.</td></tr>');
+        return;
+    }
+
+    logs.forEach(log => {
+        const row = `<tr>
+                        <td>${log.id}</td>
+                        <td>${log.date}</td>
+                        <td>${log.details}</td>
+                        <td>${log.observedImage || 'N/A'}</td>
+                        <td>${log.fields.map(field => field.name).join(', ') || 'N/A'}</td>
+                        <td>${log.crops.map(crop => crop.name).join(', ') || 'N/A'}</td>
+                        <td>${log.staffs.map(staff => staff.name).join(', ') || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-warning edit-log-btn" data-id="${log.id}">Edit</button>
+                            <button class="btn btn-danger delete-log-btn" data-id="${log.id}">Delete</button>
+                        </td>
+                     </tr>`;
+        tbody.append(row);
+    });
+}
+
+/**
+ * Event listener for Add Log button to open the modal.
+ */
+$('#addLogBtn').on('click', function() {
+    populateDropdowns(); // Populate dropdowns for Fields, Crops, and Staffs
+    $('#addLogModal').show();
+});
+
+/**
+ * Event listener for Add Log form submission.
+ */
+$('#addLogForm').on('submit', function(e) {
+    e.preventDefault();
+
+    // Gather form data
+    const data = {
+        date: $('#logDate').val(),
+        details: $('#logDetails').val().trim(),
+        observedImage: $('#observedImage').val().trim(),
+        fields: $('#logFields').val().map(id => ({ id })),
+        crops: $('#logCrops').val().map(id => ({ id })),
+        staffs: $('#logStaffs').val().map(id => ({ id }))
+    };
+
+    // AJAX POST request to add log
+    $.ajax({
+        url: 'http://localhost:8080/green-shadow/api/v1/logs',
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+            showAlert('addLogAlert', 'Log added successfully!', 'success');
+            fetchLogs();
+            setTimeout(() => {
+                $('#addLogModal').hide();
+                clearForm($('#addLogForm'));
+                clearAlert('addLogAlert');
+            }, 1500);
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to add log.';
+            showAlert('addLogAlert', error, 'danger');
+        }
+    });
+});
+
+/**
+ * Event delegation for Edit Log buttons.
+ */
+$(document).on('click', '.edit-log-btn', function() {
+    const logId = $(this).data('id');
+
+    // Fetch log details
+    $.ajax({
+        url: `http://localhost:8080/green-shadow/api/v1/logs/${logId}`,
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        },
+        success: function(log) {
+            $('#editLogId').val(log.id);
+            $('#editLogDate').val(log.date);
+            $('#editLogDetails').val(log.details);
+            $('#editObservedImage').val(log.observedImage);
+            $('#editLogFields').val(log.fields.map(field => field.id));
+            $('#editLogCrops').val(log.crops.map(crop => crop.id));
+            $('#editLogStaffs').val(log.staffs.map(staff => staff.id));
+            $('#editLogModal').show();
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to fetch log details.';
+            showAlert('logAlert', error, 'danger');
+        }
+    });
+});
+
+/**
+ * Event listener for Edit Log form submission.
+ */
+$('#editLogForm').on('submit', function(e) {
+    e.preventDefault();
+
+    // Gather form data
+    const logId = $('#editLogId').val();
+    const data = {
+        date: $('#editLogDate').val(),
+        details: $('#editLogDetails').val().trim(),
+        observedImage: $('#editObservedImage').val().trim(),
+        fields: $('#editLogFields').val().map(id => ({ id })),
+        crops: $('#editLogCrops').val().map(id => ({ id })),
+        staffs: $('#editLogStaffs').val().map(id => ({ id }))
+    };
+
+    // AJAX PUT request to update log
+    $.ajax({
+        url: `http://localhost:8080/green-shadow/api/v1/logs/${logId}`,
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+            showAlert('editLogAlert', 'Log updated successfully!', 'success');
+            fetchLogs();
+            setTimeout(() => {
+                $('#editLogModal').hide();
+                clearForm($('#editLogForm'));
+                clearAlert('editLogAlert');
+            }, 1500);
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to update log.';
+            showAlert('editLogAlert', error, 'danger');
+        }
+    });
+});
+
+/**
+ * Event delegation for Delete Log buttons.
+ */
+$(document).on('click', '.delete-log-btn', function() {
+    const logId = $(this).data('id');
+    if (confirm('Are you sure you want to delete this log?')) {
+        // AJAX DELETE request to delete log
+        $.ajax({
+            url: `http://localhost:8080/green-shadow/api/v1/logs/${logId}`,
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            },
+            success: function(response) {
+                showAlert('logAlert', 'Log deleted successfully!', 'success');
+                fetchLogs();
+            },
+            error: function(xhr) {
+                const error = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to delete log.';
+                showAlert('logAlert', error, 'danger');
+            }
+        });
+    }
+});
+
+/**
+ * Initialize Logs functionality.
+ */
+function initializeLogs() {
+    fetchLogs();
+}
+
+// Call initializeLogs during dashboard initialization
+initializeLogs();

@@ -1,73 +1,79 @@
-<!-- File: index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Shadow - Login & Sign-Up</title>
-    <!-- Include any required CSS here -->
     <style>
-        /* Basic styles for the forms and layout */
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
             display: flex;
-            height: 100vh;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
 
         .auth-container {
             background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
         }
 
-        .auth-container h2 {
-            margin-bottom: 15px;
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
             text-align: center;
+            color: #333;
         }
 
-        .auth-container form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .auth-container label {
+        label {
+            font-size: 0.9rem;
+            color: #555;
             margin-bottom: 5px;
-            font-weight: bold;
+            display: block;
         }
 
-        .auth-container input, .auth-container select {
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .auth-container button {
+        input, select {
+            width: 100%;
             padding: 10px;
-            background-color: #28a745;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
 
-        .auth-container button:hover {
-            background-color: #218838;
+        button:hover {
+            background-color: #0056b3;
         }
 
         .toggle-link {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .toggle-link a {
             color: #007bff;
-            cursor: pointer;
             text-decoration: none;
+            font-size: 0.9rem;
         }
 
         .toggle-link a:hover {
@@ -77,23 +83,27 @@
         .alert {
             padding: 10px;
             margin-bottom: 15px;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
         .alert-success {
             background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .close-alert {
             float: right;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -134,9 +144,10 @@
             <label for="signupRole">Role</label>
             <select id="signupRole" name="role" required>
                 <option value="" disabled selected>Select Role</option>
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
-
+                <option value="MANAGER">Manager</option>
+                <option value="ADMINISTRATIVE">Admin</option>
+                <option value="SCIENTIST">Scientist</option>
+                <option value="OTHER">Other</option>
             </select>
 
             <button type="submit">Sign Up</button>
@@ -149,8 +160,6 @@
 
 <!-- jQuery CDN -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Custom JavaScript -->
 <script src="js/scripts.js"></script>
-
 </body>
 </html>
