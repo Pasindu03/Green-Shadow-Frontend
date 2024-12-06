@@ -278,6 +278,14 @@
         margin-bottom: 5px;
       }
     }
+
+    /* Hide "Image 1" and "Image 2" columns in the Fields table */
+    #fields table th:nth-child(5),
+    #fields table th:nth-child(6),
+    #fields table td:nth-child(5),
+    #fields table td:nth-child(6) {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -298,6 +306,7 @@
     <div class="tab" data-tab="staff">Staff</div>
     <div class="tab" data-tab="vehicles">Vehicles</div>
     <div class="tab" data-tab="equipment">Equipment</div>
+    <div class="tab" data-tab="log">Log</div>
   </div>
 
   <!-- Tab Contents -->
@@ -332,8 +341,10 @@
       <tr>
         <th>ID</th>
         <th>Crop Name</th>
-        <th>Planting Date</th>
-        <th>Harvest Date</th>
+        <th>Scientific Name</th>
+        <th>Crop Image</th>
+        <th>Crop category</th>
+        <th>Crop Season</th>
         <th>Field</th>
         <th>Actions</th>
       </tr>
@@ -354,7 +365,7 @@
         <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Role</th>
+        <th>Designation</th>
         <th>Gender</th>
         <th>Joined Date</th>
         <th>Date of Birth</th>
@@ -387,6 +398,8 @@
         <th>Fuel Type</th>
         <th>Status</th>
         <th>Actions</th>
+        <th>Fields</th>
+        <th>Staffs</th>
       </tr>
       </thead>
       <tbody id="vehiclesTableBody">
@@ -445,9 +458,9 @@
     <span class="close close-modal">&times;</span>
     <h2>Add New Field</h2>
     <div id="addFieldAlert"></div>
-    <form id="addFieldForm">
+    <form id="addFieldForm" enctype="multipart/form-data">
       <label for="fieldName">Field Name</label>
-      <input type="text" id="fieldName" name="fieldName" required>
+      <input type="text" id="fieldName" name="name" required>
       <span class="error" id="fieldNameError"></span>
 
       <label for="location">Location</label>
@@ -455,13 +468,22 @@
       <span class="error" id="locationError"></span>
 
       <label for="size">Size</label>
-      <input type="text" id="size" name="size" required>
+      <input type="text" id="size" name="landSize" required>
       <span class="error" id="sizeError"></span>
+
+      <label for="image1">Image 1</label>
+      <input type="file" id="image1" name="fieldImage1" accept="image/*">
+      <img id="image1Preview" src="" alt="Image 1 Preview" style="display: none; max-width: 100px; margin-top: 10px;">
+
+      <label for="image2">Image 2</label>
+      <input type="file" id="image2" name="fieldImage2" accept="image/*">
+      <img id="image2Preview" src="" alt="Image 2 Preview" style="display: none; max-width: 100px; margin-top: 10px;">
 
       <button type="submit" class="btn btn-primary">Add Field</button>
     </form>
   </div>
 </div>
+
 
 <!-- Edit Field Modal -->
 <div class="modal" id="editFieldModal">
@@ -469,20 +491,28 @@
     <span class="close close-modal">&times;</span>
     <h2>Edit Field</h2>
     <div id="editFieldAlert"></div>
-    <form id="editFieldForm">
+    <form id="editFieldForm" enctype="multipart/form-data">
       <input type="hidden" id="editFieldId" name="editFieldId">
 
       <label for="editFieldName">Field Name</label>
-      <input type="text" id="editFieldName" name="editFieldName" required>
+      <input type="text" id="editFieldName" name="name" required>
       <span class="error" id="editFieldNameError"></span>
 
       <label for="editLocation">Location</label>
-      <input type="text" id="editLocation" name="editLocation" required>
+      <input type="text" id="editLocation" name="location" required>
       <span class="error" id="editLocationError"></span>
 
       <label for="editSize">Size</label>
-      <input type="text" id="editSize" name="editSize" required>
+      <input type="text" id="editSize" name="landSize" required>
       <span class="error" id="editSizeError"></span>
+
+      <label for="editImage1">Image 1</label>
+      <input type="file" id="editImage1" name="fieldImage1" accept="image/*">
+      <img id="editImage1Preview" src="" alt="Image 1 Preview" style="display: none; max-width: 100px; margin-top: 10px;">
+
+      <label for="editImage2">Image 2</label>
+      <input type="file" id="editImage2" name="fieldImage2" accept="image/*">
+      <img id="editImage2Preview" src="" alt="Image 2 Preview" style="display: none; max-width: 100px; margin-top: 10px;">
 
       <button type="submit" class="btn btn-primary">Update Field</button>
     </form>
@@ -490,227 +520,694 @@
 </div>
 
 <!-- Add Crop Modal -->
-<div class="modal" id="addCropModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Add New Crop</h2>
-    <div id="addCropAlert"></div>
-    <form id="addCropForm">
-      <label for="cropName">Crop Name</label>
-      <input type="text" id="cropName" name="cropName" required>
-      <span class="error" id="cropNameError"></span>
+<div class="modal fade" id="addCropModal" tabindex="-1" aria-labelledby="addCropModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addCropModalLabel">Add New Crop</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="addCropAlert"></div>
+        <form id="addCropForm" novalidate>
+          <!-- Crop Name -->
+          <div class="mb-3">
+            <label for="cropName" class="form-label">Crop Name</label>
+            <input type="text" class="form-control" id="cropName" name="cropName" required>
+            <div class="invalid-feedback" id="cropNameError"></div>
+          </div>
 
-      <label for="plantingDate">Planting Date</label>
-      <input type="date" id="plantingDate" name="plantingDate" required>
-      <span class="error" id="plantingDateError"></span>
+          <!-- Scientific Name -->
+          <div class="mb-3">
+            <label for="scientificName" class="form-label">Scientific Name</label>
+            <input type="text" class="form-control" id="scientificName" name="scientificName" required>
+            <div class="invalid-feedback" id="scientificNameError"></div>
+          </div>
 
-      <label for="harvestDate">Harvest Date</label>
-      <input type="date" id="harvestDate" name="harvestDate" required>
-      <span class="error" id="harvestDateError"></span>
+          <!-- Crop Image -->
+          <div class="mb-3">
+            <label for="cropImage" class="form-label">Crop Image</label>
+            <input type="file" class="form-control" id="cropImage" name="cropImage" accept="image/*" required>
+            <div class="invalid-feedback" id="cropImageError"></div>
+          </div>
 
-      <label for="cropField">Field</label>
-      <select id="cropField" name="cropField" required>
-        <option value="" disabled selected>Select Field</option>
-        <!-- Dynamic Options -->
-      </select>
-      <span class="error" id="cropFieldError"></span>
+          <!-- Crop Category -->
+          <div class="mb-3">
+            <label for="cropCategory" class="form-label">Crop Category</label>
+            <select class="form-select" id="cropCategory" name="category" required>
+              <option value="" disabled selected>Select Category</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="cropCategoryError"></div>
+          </div>
 
-      <button type="submit" class="btn btn-primary">Add Crop</button>
-    </form>
+          <!-- Crop Season -->
+          <div class="mb-3">
+            <label for="cropSeason" class="form-label">Crop Season</label>
+            <select class="form-select" id="cropSeason" name="season" required>
+              <option value="" disabled selected>Select Season</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="cropSeasonError"></div>
+          </div>
+
+          <!-- Field -->
+          <div class="mb-3">
+            <label for="cropField" class="form-label">Field</label>
+            <select class="form-select" id="cropField" name="field" required>
+              <option value="" disabled selected>Select Field</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="cropFieldError"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Add Crop</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
+
 <!-- Edit Crop Modal -->
-<div class="modal" id="editCropModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Edit Crop</h2>
-    <div id="editCropAlert"></div>
-    <form id="editCropForm">
-      <input type="hidden" id="editCropId" name="editCropId">
+<div class="modal fade" id="editCropModal" tabindex="-1" aria-labelledby="editCropModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editCropModalLabel">Edit Crop</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-      <label for="editCropName">Crop Name</label>
-      <input type="text" id="editCropName" name="editCropName" required>
-      <span class="error" id="editCropNameError"></span>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div id="editCropAlert"></div>
+        <form id="editCropForm" novalidate>
+          <!-- Hidden Crop ID -->
+          <input type="hidden" id="editCropId" name="editCropId">
 
-      <label for="editPlantingDate">Planting Date</label>
-      <input type="date" id="editPlantingDate" name="editPlantingDate" required>
-      <span class="error" id="editPlantingDateError"></span>
+          <!-- Crop Name -->
+          <div class="mb-3">
+            <label for="editCropName" class="form-label">Crop Name</label>
+            <input type="text" class="form-control" id="editCropName" name="editCropName" required>
+            <div class="invalid-feedback" id="editCropNameError">Please enter the crop name.</div>
+          </div>
 
-      <label for="editHarvestDate">Harvest Date</label>
-      <input type="date" id="editHarvestDate" name="editHarvestDate" required>
-      <span class="error" id="editHarvestDateError"></span>
+          <!-- Scientific Name -->
+          <div class="mb-3">
+            <label for="editScientificName" class="form-label">Scientific Name</label>
+            <input type="text" class="form-control" id="editScientificName" name="editScientificName" required>
+            <div class="invalid-feedback" id="editScientificNameError">Please enter the scientific name.</div>
+          </div>
 
-      <label for="editCropField">Field</label>
-      <select id="editCropField" name="editCropField" required>
-        <option value="" disabled selected>Select Field</option>
-        <!-- Dynamic Options -->
-      </select>
-      <span class="error" id="editCropFieldError"></span>
+          <!-- Crop Image -->
+          <div class="mb-3">
+            <label for="editCropImage" class="form-label">Crop Image</label>
+            <input type="file" class="form-control" id="editCropImage" name="editCropImage" accept="image/*">
+            <div class="invalid-feedback" id="editCropImageError">Please upload a crop image.</div>
+            <!-- Optionally, display the current image -->
+            <div class="mt-2">
+              <img src="" alt="Current Crop Image" id="currentCropImage" class="img-thumbnail" style="max-width: 200px;">
+            </div>
+          </div>
 
-      <button type="submit" class="btn btn-primary">Update Crop</button>
-    </form>
+          <!-- Crop Category -->
+          <div class="mb-3">
+            <label for="editCropCategory" class="form-label">Crop Category</label>
+            <select class="form-select" id="editCropCategory" name="category" required>
+              <option value="" disabled>Select Category</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="editCropCategoryError">Please select a crop category.</div>
+          </div>
+
+          <!-- Crop Season -->
+          <div class="mb-3">
+            <label for="editCropSeason" class="form-label">Crop Season</label>
+            <select class="form-select" id="editCropSeason" name="season" required>
+              <option value="" disabled>Select Season</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="editCropSeasonError">Please select a crop season.</div>
+          </div>
+
+          <!-- Field -->
+          <div class="mb-3">
+            <label for="editCropField" class="form-label">Field</label>
+            <select class="form-select" id="editCropField" name="field" required>
+              <option value="" disabled>Select Field</option>
+              <!-- Dynamic Options -->
+            </select>
+            <div class="invalid-feedback" id="editCropFieldError">Please select a field.</div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary">Update Crop</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Add Staff Modal -->
-<div class="modal" id="addStaffModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Add New Staff</h2>
-    <div id="addStaffAlert"></div>
-    <form id="addStaffForm">
-      <label for="staffName">Name</label>
-      <input type="text" id="staffName" name="staffName" required>
-      <span class="error" id="staffNameError"></span>
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="addStaffForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStaffModalLabel">Add New Staff</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="addStaffAlert"></div>
 
-      <label for="staffRole">Role</label>
-      <input type="text" id="staffRole" name="staffRole" required>
-      <span class="error" id="staffRoleError"></span>
+          <div class="row g-3">
+            <!-- First Name -->
+            <div class="col-md-6">
+              <label for="addFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="addFirstName" name="firstName" required>
+              <div class="invalid-feedback" id="addFirstNameError">First name is required.</div>
+            </div>
 
-      <label for="staffContact">Contact</label>
-      <input type="text" id="staffContact" name="staffContact" required>
-      <span class="error" id="staffContactError"></span>
+            <!-- Last Name -->
+            <div class="col-md-6">
+              <label for="addLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="addLastName" name="lastName" required>
+              <div class="invalid-feedback" id="addLastNameError">Last name is required.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Add Staff</button>
-    </form>
+            <!-- Designation -->
+            <div class="col-md-6">
+              <label for="addDesignation" class="form-label">Designation</label>
+              <input type="text" class="form-control" id="addDesignation" name="designation" required>
+              <div class="invalid-feedback" id="addDesignationError">Designation is required.</div>
+            </div>
+
+            <!-- Gender -->
+            <div class="col-md-6">
+              <label for="addGender" class="form-label">Gender</label>
+              <select class="form-select" id="addGender" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="addGenderError">Please select a gender.</div>
+            </div>
+
+            <!-- Joined Date -->
+            <div class="col-md-6">
+              <label for="addJoinedDate" class="form-label">Joined Date</label>
+              <input type="date" class="form-control" id="addJoinedDate" name="joinedDate" required>
+              <div class="invalid-feedback" id="addJoinedDateError">Joined date is required.</div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="col-md-6">
+              <label for="addDOB" class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" id="addDOB" name="dob" required>
+              <div class="invalid-feedback" id="addDOBError">Date of birth is required.</div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+              <label for="addAddress" class="form-label">Address</label>
+              <textarea class="form-control" id="addAddress" name="address" rows="3" required></textarea>
+              <div class="invalid-feedback" id="addAddressError">Address is required.</div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-md-6">
+              <label for="addContact" class="form-label">Contact</label>
+              <input type="tel" class="form-control" id="addContact" name="contact" pattern="^\+?[0-9\s\-]{7,15}$" required>
+              <div class="invalid-feedback" id="addContactError">Valid contact number is required.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+              <label for="addEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="addEmail" name="email" required>
+              <div class="invalid-feedback" id="addEmailError">Valid email is required.</div>
+            </div>
+
+            <!-- Field ID -->
+            <div class="col-md-6">
+              <label for="addFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="addFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="addFieldIdError">Field ID is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Staff</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Edit Staff Modal -->
-<div class="modal" id="editStaffModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Edit Staff</h2>
-    <div id="editStaffAlert"></div>
-    <form id="editStaffForm">
-      <input type="hidden" id="editStaffId" name="editStaffId">
+<div class="modal fade" id="editStaffModal" tabindex="-1" aria-labelledby="editStaffModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editStaffForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStaffModalLabel">Edit Staff</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="editStaffAlert"></div>
 
-      <label for="editStaffName">Name</label>
-      <input type="text" id="editStaffName" name="editStaffName" required>
-      <span class="error" id="editStaffNameError"></span>
+          <input type="hidden" id="editStaffId" name="staffId">
 
-      <label for="editStaffRole">Role</label>
-      <input type="text" id="editStaffRole" name="editStaffRole" required>
-      <span class="error" id="editStaffRoleError"></span>
+          <div class="row g-3">
+            <!-- First Name -->
+            <div class="col-md-6">
+              <label for="editFirstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+              <div class="invalid-feedback" id="editFirstNameError">First name is required.</div>
+            </div>
 
-      <label for="editStaffContact">Contact</label>
-      <input type="text" id="editStaffContact" name="editStaffContact" required>
-      <span class="error" id="editStaffContactError"></span>
+            <!-- Last Name -->
+            <div class="col-md-6">
+              <label for="editLastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="editLastName" name="lastName" required>
+              <div class="invalid-feedback" id="editLastNameError">Last name is required.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Update Staff</button>
-    </form>
+            <!-- Designation -->
+            <div class="col-md-6">
+              <label for="editDesignation" class="form-label">Designation</label>
+              <input type="text" class="form-control" id="editDesignation" name="designation" required>
+              <div class="invalid-feedback" id="editDesignationError">Designation is required.</div>
+            </div>
+
+            <!-- Gender -->
+            <div class="col-md-6">
+              <label for="editGender" class="form-label">Gender</label>
+              <select class="form-select" id="editGender" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="editGenderError">Please select a gender.</div>
+            </div>
+
+            <!-- Joined Date -->
+            <div class="col-md-6">
+              <label for="editJoinedDate" class="form-label">Joined Date</label>
+              <input type="date" class="form-control" id="editJoinedDate" name="joinedDate" required>
+              <div class="invalid-feedback" id="editJoinedDateError">Joined date is required.</div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="col-md-6">
+              <label for="editDOB" class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" id="editDOB" name="dob" required>
+              <div class="invalid-feedback" id="editDOBError">Date of birth is required.</div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+              <label for="editAddress" class="form-label">Address</label>
+              <textarea class="form-control" id="editAddress" name="address" rows="3" required></textarea>
+              <div class="invalid-feedback" id="editAddressError">Address is required.</div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-md-6">
+              <label for="editContact" class="form-label">Contact</label>
+              <input type="tel" class="form-control" id="editContact" name="contact" pattern="^\+?[0-9\s\-]{7,15}$" required>
+              <div class="invalid-feedback" id="editContactError">Valid contact number is required.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-6">
+              <label for="editEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="editEmail" name="email" required>
+              <div class="invalid-feedback" id="editEmailError">Valid email is required.</div>
+            </div>
+
+            <!-- Field ID -->
+            <div class="col-md-6">
+              <label for="editFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="editFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="editFieldIdError">Field ID is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Staff</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
-
 <!-- Add Vehicle Modal -->
-<div class="modal" id="addVehicleModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Add New Vehicle</h2>
-    <div id="addVehicleAlert"></div>
-    <form id="addVehicleForm">
-      <label for="vehicleType">Type</label>
-      <input type="text" id="vehicleType" name="vehicleType" required>
-      <span class="error" id="vehicleTypeError"></span>
+<div class="modal fade" id="addVehicleModal" tabindex="-1" aria-labelledby="addVehicleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="addVehicleForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addVehicleModalLabel">Add New Vehicle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="addVehicleAlert"></div>
 
-      <label for="vehicleModel">Model</label>
-      <input type="text" id="vehicleModel" name="vehicleModel" required>
-      <span class="error" id="vehicleModelError"></span>
+          <div class="row g-3">
+            <!-- License Plate -->
+            <div class="col-md-6">
+              <label for="addLicensePlate" class="form-label">License Plate</label>
+              <input type="text" class="form-control" id="addLicensePlate" name="licensePlate" required>
+              <div class="invalid-feedback" id="addLicensePlateError">License plate is required.</div>
+            </div>
 
-      <label for="licensePlate">License Plate</label>
-      <input type="text" id="licensePlate" name="licensePlate" required>
-      <span class="error" id="licensePlateError"></span>
+            <!-- Vehicle Category -->
+            <div class="col-md-6">
+              <label for="addVehicleCategory" class="form-label">Vehicle Category</label>
+              <select class="form-select" id="addVehicleCategory" name="vehicleCategory" required>
+                <option value="">Select Category</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Truck">Truck</option>
+                <option value="Van">Van</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="addVehicleCategoryError">Please select a vehicle category.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Add Vehicle</button>
-    </form>
+            <!-- Fuel Type -->
+            <div class="col-md-6">
+              <label for="addFuelType" class="form-label">Fuel Type</label>
+              <select class="form-select" id="addFuelType" name="fuelType" required>
+                <option value="">Select Fuel Type</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="addFuelTypeError">Please select a fuel type.</div>
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-6">
+              <label for="addStatus" class="form-label">Status</label>
+              <select class="form-select" id="addStatus" name="status" required>
+                <option value="">Select Status</option>
+                <option value="Active">Active</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Decommissioned">Decommissioned</option>
+              </select>
+              <div class="invalid-feedback" id="addStatusError">Please select a status.</div>
+            </div>
+
+            <!-- Field Selection -->
+            <div class="col-md-6">
+              <label for="addFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="addFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="addFieldIdError">Field ID is required.</div>
+            </div>
+
+            <!-- Assigned Staff -->
+            <div class="col-md-6">
+              <label for="addAssignedStaff" class="form-label">Assigned Staff</label>
+              <select class="form-select" id="addAssignedStaff" name="assignedStaff" required>
+                <option value="">Select Staff</option>
+                <!-- Dynamically Populate Staff Options -->
+              </select>
+              <div class="invalid-feedback" id="addAssignedStaffError">Please select an assigned staff.</div>
+            </div>
+
+            <!-- Vehicle Model -->
+            <div class="col-md-6">
+              <label for="addVehicleModel" class="form-label">Vehicle Model</label>
+              <input type="text" class="form-control" id="addVehicleModel" name="vehicleModel" required>
+              <div class="invalid-feedback" id="addVehicleModelError">Vehicle model is required.</div>
+            </div>
+
+            <!-- Vehicle Type -->
+            <div class="col-md-6">
+              <label for="addVehicleType" class="form-label">Vehicle Type</label>
+              <input type="text" class="form-control" id="addVehicleType" name="vehicleType" required>
+              <div class="invalid-feedback" id="addVehicleTypeError">Vehicle type is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Vehicle</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Edit Vehicle Modal -->
-<div class="modal" id="editVehicleModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Edit Vehicle</h2>
-    <div id="editVehicleAlert"></div>
-    <form id="editVehicleForm">
-      <input type="hidden" id="editVehicleId" name="editVehicleId">
+<div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editVehicleForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="editVehicleModalLabel">Edit Vehicle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="editVehicleAlert"></div>
 
-      <label for="editVehicleType">Type</label>
-      <input type="text" id="editVehicleType" name="editVehicleType" required>
-      <span class="error" id="editVehicleTypeError"></span>
+          <input type="hidden" id="editVehicleId" name="vehicleId">
 
-      <label for="editVehicleModel">Model</label>
-      <input type="text" id="editVehicleModel" name="editVehicleModel" required>
-      <span class="error" id="editVehicleModelError"></span>
+          <div class="row g-3">
+            <!-- License Plate -->
+            <div class="col-md-6">
+              <label for="editLicensePlate" class="form-label">License Plate</label>
+              <input type="text" class="form-control" id="editLicensePlate" name="licensePlate" required>
+              <div class="invalid-feedback" id="editLicensePlateError">License plate is required.</div>
+            </div>
 
-      <label for="editLicensePlate">License Plate</label>
-      <input type="text" id="editLicensePlate" name="editLicensePlate" required>
-      <span class="error" id="editLicensePlateError"></span>
+            <!-- Vehicle Category -->
+            <div class="col-md-6">
+              <label for="editVehicleCategory" class="form-label">Vehicle Category</label>
+              <select class="form-select" id="editVehicleCategory" name="vehicleCategory" required>
+                <option value="">Select Category</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Truck">Truck</option>
+                <option value="Van">Van</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="editVehicleCategoryError">Please select a vehicle category.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Update Vehicle</button>
-    </form>
+            <!-- Fuel Type -->
+            <div class="col-md-6">
+              <label for="editFuelType" class="form-label">Fuel Type</label>
+              <select class="form-select" id="editFuelType" name="fuelType" required>
+                <option value="">Select Fuel Type</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="editFuelTypeError">Please select a fuel type.</div>
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-6">
+              <label for="editStatus" class="form-label">Status</label>
+              <select class="form-select" id="editStatus" name="status" required>
+                <option value="">Select Status</option>
+                <option value="Active">Active</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Decommissioned">Decommissioned</option>
+              </select>
+              <div class="invalid-feedback" id="editStatusError">Please select a status.</div>
+            </div>
+
+            <!-- Field Selection -->
+            <div class="col-md-6">
+              <label for="editFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="editFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="editFieldIdError">Field ID is required.</div>
+            </div>
+
+            <!-- Assigned Staff -->
+            <div class="col-md-6">
+              <label for="editAssignedStaff" class="form-label">Assigned Staff</label>
+              <select class="form-select" id="editAssignedStaff" name="assignedStaff" required>
+                <option value="">Select Staff</option>
+                <!-- Dynamically Populate Staff Options -->
+              </select>
+              <div class="invalid-feedback" id="editAssignedStaffError">Please select an assigned staff.</div>
+            </div>
+
+            <!-- Vehicle Model -->
+            <div class="col-md-6">
+              <label for="editVehicleModel" class="form-label">Vehicle Model</label>
+              <input type="text" class="form-control" id="editVehicleModel" name="vehicleModel" required>
+              <div class="invalid-feedback" id="editVehicleModelError">Vehicle model is required.</div>
+            </div>
+
+            <!-- Vehicle Type -->
+            <div class="col-md-6">
+              <label for="editVehicleType" class="form-label">Vehicle Type</label>
+              <input type="text" class="form-control" id="editVehicleType" name="vehicleType" required>
+              <div class="invalid-feedback" id="editVehicleTypeError">Vehicle type is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Vehicle</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Add Equipment Modal -->
-<div class="modal" id="addEquipmentModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Add New Equipment</h2>
-    <div id="addEquipmentAlert"></div>
-    <form id="addEquipmentForm">
-      <label for="equipmentName">Name</label>
-      <input type="text" id="equipmentName" name="equipmentName" required>
-      <span class="error" id="equipmentNameError"></span>
+<div class="modal fade" id="addEquipmentModal" tabindex="-1" aria-labelledby="addEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="addEquipmentForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addEquipmentModalLabel">Add New Equipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="addEquipmentAlert"></div>
 
-      <label for="equipmentType">Type</label>
-      <input type="text" id="equipmentType" name="equipmentType" required>
-      <span class="error" id="equipmentTypeError"></span>
+          <div class="row g-3">
+            <!-- Equipment Name -->
+            <div class="col-md-6">
+              <label for="addEquipmentName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="addEquipmentName" name="equipmentName" required>
+              <div class="invalid-feedback" id="addEquipmentNameError">Equipment name is required.</div>
+            </div>
 
-      <label for="equipmentStatus">Status</label>
-      <select id="equipmentStatus" name="equipmentStatus" required>
-        <option value="" disabled selected>Select Status</option>
-        <option value="Available">Available</option>
-        <option value="In Use">In Use</option>
-        <option value="Under Maintenance">Under Maintenance</option>
-      </select>
-      <span class="error" id="equipmentStatusError"></span>
+            <!-- Equipment Type -->
+            <div class="col-md-6">
+              <label for="addEquipmentType" class="form-label">Type</label>
+              <input type="text" class="form-control" id="addEquipmentType" name="equipmentType" required>
+              <div class="invalid-feedback" id="addEquipmentTypeError">Equipment type is required.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Add Equipment</button>
-    </form>
+            <!-- Equipment Status -->
+            <div class="col-md-6">
+              <label for="addEquipmentStatus" class="form-label">Status</label>
+              <select class="form-select" id="addEquipmentStatus" name="equipmentStatus" required>
+                <option value="">Select Status</option>
+                <option value="Available">Available</option>
+                <option value="In Use">In Use</option>
+                <option value="Under Maintenance">Under Maintenance</option>
+              </select>
+              <div class="invalid-feedback" id="addEquipmentStatusError">Please select a status.</div>
+            </div>
+
+            <!-- Field ID -->
+            <div class="col-md-6">
+              <label for="addFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="addFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="addFieldIdError">Field ID is required.</div>
+            </div>
+
+            <!-- Assigned Staff -->
+            <div class="col-md-6">
+              <label for="addAssignedStaff" class="form-label">Assigned Staff</label>
+              <select class="form-select" id="addAssignedStaff" name="assignedStaff" required>
+                <option value="">Select Staff</option>
+                <!-- Dynamically Populate Staff Options -->
+              </select>
+              <div class="invalid-feedback" id="addAssignedStaffError">Please select an assigned staff.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Equipment</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- Edit Equipment Modal -->
-<div class="modal" id="editEquipmentModal">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <h2>Edit Equipment</h2>
-    <div id="editEquipmentAlert"></div>
-    <form id="editEquipmentForm">
-      <input type="hidden" id="editEquipmentId" name="editEquipmentId">
+<div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-labelledby="editEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editEquipmentForm" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="editEquipmentModalLabel">Edit Equipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alert Section -->
+          <div id="editEquipmentAlert"></div>
 
-      <label for="editEquipmentName">Name</label>
-      <input type="text" id="editEquipmentName" name="editEquipmentName" required>
-      <span class="error" id="editEquipmentNameError"></span>
+          <input type="hidden" id="editEquipmentId" name="equipmentId">
 
-      <label for="editEquipmentType">Type</label>
-      <input type="text" id="editEquipmentType" name="editEquipmentType" required>
-      <span class="error" id="editEquipmentTypeError"></span>
+          <div class="row g-3">
+            <!-- Equipment Name -->
+            <div class="col-md-6">
+              <label for="editEquipmentName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="editEquipmentName" name="equipmentName" required>
+              <div class="invalid-feedback" id="editEquipmentNameError">Equipment name is required.</div>
+            </div>
 
-      <label for="editEquipmentStatus">Status</label>
-      <select id="editEquipmentStatus" name="editEquipmentStatus" required>
-        <option value="" disabled selected>Select Status</option>
-        <option value="Available">Available</option>
-        <option value="In Use">In Use</option>
-        <option value="Under Maintenance">Under Maintenance</option>
-      </select>
-      <span class="error" id="editEquipmentStatusError"></span>
+            <!-- Equipment Type -->
+            <div class="col-md-6">
+              <label for="editEquipmentType" class="form-label">Type</label>
+              <input type="text" class="form-control" id="editEquipmentType" name="equipmentType" required>
+              <div class="invalid-feedback" id="editEquipmentTypeError">Equipment type is required.</div>
+            </div>
 
-      <button type="submit" class="btn btn-primary">Update Equipment</button>
-    </form>
+            <!-- Equipment Status -->
+            <div class="col-md-6">
+              <label for="editEquipmentStatus" class="form-label">Status</label>
+              <select class="form-select" id="editEquipmentStatus" name="equipmentStatus" required>
+                <option value="">Select Status</option>
+                <option value="Available">Available</option>
+                <option value="In Use">In Use</option>
+                <option value="Under Maintenance">Under Maintenance</option>
+              </select>
+              <div class="invalid-feedback" id="editEquipmentStatusError">Please select a status.</div>
+            </div>
+
+            <!-- Field ID -->
+            <div class="col-md-6">
+              <label for="editFieldId" class="form-label">Field ID</label>
+              <input type="text" class="form-control" id="editFieldId" name="fieldId" required>
+              <div class="invalid-feedback" id="editFieldIdError">Field ID is required.</div>
+            </div>
+
+            <!-- Assigned Staff -->
+            <div class="col-md-6">
+              <label for="editAssignedStaff" class="form-label">Assigned Staff</label>
+              <select class="form-select" id="editAssignedStaff" name="assignedStaff" required>
+                <option value="">Select Staff</option>
+                <!-- Dynamically Populate Staff Options -->
+              </select>
+              <div class="invalid-feedback" id="editAssignedStaffError">Please select an assigned staff.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Equipment</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
